@@ -5,7 +5,7 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ClientHandler implements Runnable{
+public class ClientHandler implements Runnable {
 	private static final String COMMAND_STOP_SERVER = "stopServer";
 
 	private final Socket socket;
@@ -35,6 +35,12 @@ public class ClientHandler implements Runnable{
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} finally {
+			server.onClientStopped(this);
+ 		}
+	}
+
+	public void stopClient() throws IOException {
+		socket.close();
 	}
 }
