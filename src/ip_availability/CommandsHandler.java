@@ -68,10 +68,10 @@ public class CommandsHandler {
 			return "error:notlogged";
 		}
 		
-		if("shutdown".equals(split[1]) && user.get(split[0]) !=null
+		if("stopServer".equals(split[1]) && user.get(split[0]) !=null
 				&& user.get(split[0]).getLoggedIn()){
-			return "shutdown";
-		}else if("shutdown".equals(split[1]) && user.get(split[0]) !=null
+			return "stopServer";
+		}else if("stopServer".equals(split[1]) && user.get(split[0]) !=null
 				&& !user.get(split[0]).getLoggedIn()){
 			return "error:notlogged";
 			

@@ -19,16 +19,19 @@ public class ClientHandler implements Runnable {
 	@Override
 	public void run() {
 		try {
+			CommandsHandler command = new CommandsHandler();
 			final PrintStream out = new PrintStream(socket.getOutputStream());
 			final Scanner scanner = new Scanner(socket.getInputStream());
+			String result = new String();
 
 			while (scanner.hasNextLine()) {
 				final String line = scanner.nextLine();
-				if (COMMAND_STOP_SERVER.equals(line)) {
+				result = command.execute(line);
+				if (COMMAND_STOP_SERVER.equals(result)) {
 					server.stopServer();
 					break;
 				}
-				out.println(line);
+				out.println(result);
 			}
 
 			scanner.close();
