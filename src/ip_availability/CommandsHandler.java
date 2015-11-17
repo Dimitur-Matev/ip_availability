@@ -1,27 +1,10 @@
 package ip_availability;
 
-import java.util.Map;
 import java.io.IOException;
-import java.net.Socket;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-
 
 public class CommandsHandler {
 
-
-	//final static Map<String, User> user = new HashMap<String, User>();
 	
-	
-	public boolean Authenticate(){
-		// implementation code
-		return false;
-	}
-	
-
 	public String execute(String command, ClientHandler client) throws IOException {
 
 		final String[] split = command.split(":");			
