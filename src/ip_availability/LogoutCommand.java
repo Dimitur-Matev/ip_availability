@@ -18,7 +18,7 @@ public class LogoutCommand {
 			
 			Server server = this.client.getServer();
 			this.client.user.setLoggedIn(false);
-			List<String> newUsersToLogoutCount = server.getUsersToLoginCount();
+			List<String> newUsersToLogoutCount = server.getUsersToLogoutCount();
 			newUsersToLogoutCount.add(this.client.getUser().getName());
 			this.client.user.setTo(new Date());
 			Map<String,ClientHandler> newClientsMap = server.getClientsMap();
