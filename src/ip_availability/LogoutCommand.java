@@ -1,8 +1,8 @@
 package ip_availability;
 
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class LogoutCommand {
 	
@@ -18,11 +18,12 @@ public class LogoutCommand {
 			
 			Server server = this.client.getServer();
 			this.client.user.setLoggedIn(false);
-			List<String> newUsersToLogoutCount = new LinkedList<String>();
-			newUsersToLogoutCount = server.getUsersToLoginCount();
+			List<String> newUsersToLogoutCount = server.getUsersToLoginCount();
 			newUsersToLogoutCount.add(this.client.getUser().getName());
-			server.setUsersToLogoutCount(newUsersToLogoutCount);
 			this.client.user.setTo(new Date());
+			Map<String,ClientHandler> newClientsMap = server.getClientsMap();
+			newClientsMap.remove(this.client.getUser().getName());
+			newClientsMap.put(this.client.getUser().getName(),client);
 			
 			return "ok";
 		} else

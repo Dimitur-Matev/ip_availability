@@ -1,6 +1,7 @@
 package ip_availability;
 
 import java.util.Map;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.Collections;
 import java.util.Date;
@@ -21,7 +22,7 @@ public class CommandsHandler {
 	}
 	
 
-	public String execute(String command, ClientHandler client) {
+	public String execute(String command, ClientHandler client) throws IOException {
 
 		final String[] split = command.split(":");			
 //		if(!command.contains(":")){
@@ -29,23 +30,25 @@ public class CommandsHandler {
 //		}
 		
 		String result;
-		if ("login".equals(split[0])) return result = (new LoginCommand(client, split[1])).Login();
+		Server server = client.getServer();
+		
+		
+		if ("login".equals(split[0]) && server.getClientsMap().containsKey(split[1]))
+			return result = (new LoginCommand(client, split[1], server.getClientsMap().get(split[1])).Login());
+		else if ("login".equals(split[0]) && !server.getClientsMap().containsKey(split[1])) 
+				return result = (new LoginCommand(client, split[1], null)).Login();
 		else if ("logout".equals(split[0])) return result = (new LogoutCommand(client)).Logout();
-
+		else if ("shutdown".equals(split[0])) return result = (new ShutdownCommand(client)).Shutdown();
+		else if ("info".equals(split[0])) return result = (new InfoCommand(client, server.getClientsMap().get(split[1]),split[1])).Info();
+//		else if ("listavailable".equals(split[0])) result = ListAvailable(line);
+//		else if ("listabsent".equals(split[0])) result = ListAbsent(line);
+		else result = "error:unknowncommand";
+		return result;
 		
 		
 
+	
 		
-//		if ("logout".equals(split[1])) {
-//			if (user.get(split[0]) != null && user.get(split[0]).getLoggedIn() == true) {
-//				user.get(split[0]).setLoggedIn(false);
-//				usersToLogoutCount.add(split[0]);
-//				user.get(split[0]).setTo(new Date());
-//				return "ok";
-//			} else
-//				return "error:notlogged";
-//		}
-//		
 //		if ("info".equals(split[1]) && user.get(split[0]) !=null
 //				&& user.get(split[2]) !=null
 //				&& user.get(split[0]).getLoggedIn() == true) {
@@ -69,7 +72,7 @@ public class CommandsHandler {
 //				&& user.get(split[0]).getLoggedIn() == false){
 //			return "error:notlogged";
 //		}
-//		
+		
 //		if("listavailable".equals(split[1]) && user.get(split[0]) !=null
 //				&& user.get(split[0]).getLoggedIn() == true){
 //			
@@ -117,7 +120,6 @@ public class CommandsHandler {
 //			
 //		}
 //		
-		return "error:unknowncommand";
 	}
 
 }

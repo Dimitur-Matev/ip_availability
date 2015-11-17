@@ -52,8 +52,8 @@ public class ClientHandler implements Runnable {
 		return user;
 	}
 
-	public void setUser(String name) {
-		this.user = new User(name);
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 	public Server getServer(){

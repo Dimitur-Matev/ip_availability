@@ -1,47 +1,70 @@
 package ip_availability;
 
+import java.io.IOException;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class LoginCommand extends CommandsHandler{
 	
 	private ClientHandler client;
+	private ClientHandler oldClient;
 	private String name;
 	
-	public LoginCommand(ClientHandler client, String name){
+	public LoginCommand(ClientHandler client, String name, ClientHandler oldClient){
 		this.client = client;
 		this.name = name;
+		this.oldClient = oldClient;
 	}
 	
-	public String Login(){
-		if (this.client.getUser() ==null) {
-			
-			this.client.setUser(this.name);
+	public String Login() throws IOException{
+		if (this.client.getUser() ==null && this.oldClient == null) {
+		
+			this.client.setUser(new User(this.name));
 			Server server = this.client.getServer();
-			List<String> newUsersToLoginCount = new LinkedList<String>();
-			newUsersToLoginCount = server.getUsersToLoginCount();
+			List<String> newUsersToLoginCount = server.getUsersToLoginCount(); 
 			newUsersToLoginCount.add(this.name);
-			server.setUsersToLoginCount(newUsersToLoginCount); 
 			this.client.user.increaseNumberOfLogins();
 			this.client.user.setFrom(new Date());
+			Map<String,ClientHandler> newClientsMap = server.getClientsMap();
+			newClientsMap.put(this.name,client);
 			
-			return "ok";
+			System.out.println("NEW USER ADDED");
 			
-		}else if(!client.getUser().getLoggedIn()){
+			
+		}else if(this.oldClient == null && !this.client.getUser().getLoggedIn()){
 			
 			Server server = this.client.getServer();
 			this.client.user.setLoggedIn(true);
-			List<String> newUsersToLogoutCount = new LinkedList<String>();
-			newUsersToLogoutCount = server.getUsersToLoginCount();
+			List<String> newUsersToLogoutCount = server.getUsersToLoginCount();
 			newUsersToLogoutCount.remove(this.name);
-			server.setUsersToLogoutCount(newUsersToLogoutCount);
 			this.client.user.increaseNumberOfLogins();
 			this.client.user.setFrom(new Date());
+			Map<String,ClientHandler> newClientsMap = server.getClientsMap();
+			newClientsMap.remove(this.name);
+			newClientsMap.put(this.name,client);
 			
-			return "ok";
+			System.out.println("LOGIN TO EXISTING USER");
+			
+		}else if(this.oldClient != null && this.oldClient.getUser().getLoggedIn()){
+			
+			(new LogoutCommand(this.oldClient)).Logout();
+			this.oldClient.stopClient();
+			Server server = this.client.getServer();
+			this.client.setUser(new User(this.name));
+			this.client.user.setLoggedIn(true);
+			List<String> newUsersToLogoutCount = server.getUsersToLoginCount();
+			newUsersToLogoutCount.remove(this.name);
+			this.client.user.increaseNumberOfLogins();
+			this.client.user.setFrom(new Date());
+			Map<String,ClientHandler> newClientsMap = server.getClientsMap();
+			newClientsMap.remove(this.name);
+			newClientsMap.put(this.name,client);
+			
+			System.out.println("CLOSING OLD USER AND LOGGING IN");
+			
 		}
 		
-		return "error:alreadyloggedin";
+		return "ok";
 	}
 }
