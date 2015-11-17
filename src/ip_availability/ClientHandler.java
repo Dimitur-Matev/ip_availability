@@ -6,10 +6,11 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ClientHandler implements Runnable {
-	private static final String COMMAND_STOP_SERVER = "stopServer";
+	private static final String COMMAND_STOP_SERVER = "shutdown";
 
 	private final Socket socket;
 	private final Server server;
+	public User user;
 
 	public ClientHandler(Server server, Socket socket) {
 		this.socket = socket;
@@ -26,7 +27,7 @@ public class ClientHandler implements Runnable {
 
 			while (scanner.hasNextLine()) {
 				final String line = scanner.nextLine();
-				result = command.execute(line);
+				result = command.execute(line,this);
 				if (COMMAND_STOP_SERVER.equals(result)) {
 					server.stopServer();
 					break;
@@ -45,5 +46,17 @@ public class ClientHandler implements Runnable {
 
 	public void stopClient() throws IOException {
 		socket.close();
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(String name) {
+		this.user = new User(name);
+	}
+	
+	public Server getServer(){
+		return this.server;
 	}
 }

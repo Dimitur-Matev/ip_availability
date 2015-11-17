@@ -7,12 +7,17 @@ import java.net.SocketException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Server {
 	private final int port;
 	private boolean running;
 	private final List<ClientHandler> clients = Collections.synchronizedList(new LinkedList<ClientHandler>());
 	private ServerSocket serverSocket;
+	private Map<String,ClientHandler> clientsMap = (Map<String, ClientHandler>) Collections.synchronizedMap(new HashMap<String,ClientHandler>());
+	private List<String> usersToLoginCount = Collections.synchronizedList(new LinkedList<String>());
+	private List<String> usersToLogoutCount = Collections.synchronizedList(new LinkedList<String>());
 
 	public Server(int port) {
 		this.port = port;
@@ -62,11 +67,37 @@ public class Server {
 		serverSocket = null;
 		
 		for (ClientHandler next : clients) {
-			next.stopClient();
+			if(next != null){
+				next.stopClient();
+			}
 		}
 	}
 
 	public void onClientStopped(ClientHandler clientHandler) {
 		clients.remove(clientHandler);
+	}
+
+	public Map<String,ClientHandler> getClientsMap() {
+		return clientsMap;
+	}
+
+	public void setClientsMap(Map<String,ClientHandler> clientsMap) {
+		this.clientsMap = clientsMap;
+	}
+
+	public List<String> getUsersToLoginCount() {
+		return usersToLoginCount;
+	}
+
+	public void setUsersToLoginCount(List<String> usersToLoginCount) {
+		this.usersToLoginCount = usersToLoginCount;
+	}
+
+	public List<String> getUsersToLogoutCount() {
+		return usersToLogoutCount;
+	}
+
+	public void setUsersToLogoutCount(List<String> usersToLogoutCount) {
+		this.usersToLogoutCount = usersToLogoutCount;
 	}
 }
