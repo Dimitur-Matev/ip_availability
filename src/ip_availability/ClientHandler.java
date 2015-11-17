@@ -24,6 +24,7 @@ public class ClientHandler implements Runnable {
 			final PrintStream out = new PrintStream(socket.getOutputStream());
 			final Scanner scanner = new Scanner(socket.getInputStream());
 			String result = new String();
+			out.println("Въведете команда:");
 
 			while (scanner.hasNextLine()) {
 				final String line = scanner.nextLine();
@@ -33,6 +34,7 @@ public class ClientHandler implements Runnable {
 					break;
 				}
 				out.println(result);
+				out.println("Въведете команда:");
 			}
 
 			scanner.close();

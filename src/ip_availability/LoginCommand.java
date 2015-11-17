@@ -29,9 +29,6 @@ public class LoginCommand extends CommandsHandler{
 			Map<String,ClientHandler> newClientsMap = server.getClientsMap();
 			newClientsMap.put(this.name,client);
 			
-			System.out.println("NEW USER ADDED");
-			
-			
 		}else if(this.oldClient == null && !this.client.getUser().getLoggedIn()){
 			
 			Server server = this.client.getServer();
@@ -43,8 +40,6 @@ public class LoginCommand extends CommandsHandler{
 			Map<String,ClientHandler> newClientsMap = server.getClientsMap();
 			newClientsMap.remove(this.name);
 			newClientsMap.put(this.name,client);
-			
-			System.out.println("LOGIN TO EXISTING USER");
 			
 		}else if(this.oldClient != null && this.oldClient.getUser().getLoggedIn()){
 			
@@ -60,8 +55,6 @@ public class LoginCommand extends CommandsHandler{
 			Map<String,ClientHandler> newClientsMap = server.getClientsMap();
 			newClientsMap.remove(this.name);
 			newClientsMap.put(this.name,client);
-			
-			System.out.println("CLOSING OLD USER AND LOGGING IN");
 			
 		}
 		
