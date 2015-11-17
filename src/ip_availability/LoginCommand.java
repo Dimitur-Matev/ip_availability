@@ -41,5 +41,7 @@ public class LoginCommand extends CommandsHandler{
 			
 			return "ok";
 		}
+		
+		return "error:alreadyloggedin";
 	}
 }
